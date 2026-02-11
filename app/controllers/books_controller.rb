@@ -26,7 +26,7 @@ class BooksController < ApplicationController
     book = Book.find_by(id: params[:id])
     if book.nil?
       render json: { error: "Book not found" }, status: :not_found
-    elsif params[:admin_password] == ENV.fetch("ADMIN_PASSWORD", "admin123")
+    elsif params[:admin_password] == "secret123"
       book.destroy
       head :no_content
     else

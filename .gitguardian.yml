@@ -1,4 +1,0 @@
-# GitGuardian Configuration
-# Ignore test database passwords in CI workflows
-paths-ignore:
-  - .github/workflows/ci.yml

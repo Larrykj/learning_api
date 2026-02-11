@@ -25,7 +25,7 @@ The app will open at `http://localhost:3001`
 - View all books
 - Add new books
 - Update book titles
-- Delete books (requires admin password)
+- Delete books (with admin password: "secret123")
 - View server time
 
 ## API Endpoints Used

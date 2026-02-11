@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Books UI</title>
+  <meta name="csrf-token" content="<%= form_authenticity_token %>">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    h1 { margin-bottom: 1rem; }
+    form { margin-bottom: 1.5rem; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: left; }
+    button { margin-right: 0.25rem; }
+    #status { margin-top: 1rem; color: #444; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Books API Frontend</h1>
+
+    <form id="create-book-form">
+      <label>
+        Title
+        <input type="text" id="title-input" required>
+      </label>
+      <label>
+        Author
+        <input type="text" id="author-input" required>
+      </label>
+      <button type="submit">Add Book</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="books-table-body"></tbody>
+    </table>
+
+    <div id="status"></div>
+  </main>
+
+  <script>
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+    const tableBody = document.getElementById('books-table-body');
+    const statusBox = document.getElementById('status');
+
+    document.getElementById('create-book-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const title = document.getElementById('title-input').value.trim();
+      const author = document.getElementById('author-input').value.trim();
+      if (!title || !author) {
+        statusBox.textContent = 'Title and author are required.';
+        return;
+      }
+
+      try {
+        const response = await fetch('/books', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
+          },
+          body: JSON.stringify({ title, author })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.errors ? error.errors.join(', ') : 'Unable to create book');
+        }
+
+        event.target.reset();
+        statusBox.textContent = 'Book created successfully.';
+        await loadBooks();
+      } catch (error) {
+        statusBox.textContent = error.message;
+      }
+    });
+
+    async function loadBooks() {
+      const response = await fetch('/books');
+      const books = await response.json();
+      renderBooks(Array.isArray(books) ? books : []);
+    }
+
+    function renderBooks(books) {
+      tableBody.innerHTML = '';
+      books.forEach((book) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${book.id}</td>
+          <td>${book.title}</td>
+          <td>${book.author}</td>
+          <td>
+            <button data-id="${book.id}" class="rename">Rename</button>
+            <button data-id="${book.id}" class="delete">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+    tableBody.addEventListener('click', async (event) => {
+      const target = event.target;
+      const bookId = target.dataset.id;
+      if (!bookId) {
+        return;
+      }
+
+      if (target.classList.contains('rename')) {
+        const newTitle = prompt('Enter the new title:');
+        if (!newTitle) {
+          return;
+        }
+        await updateBookTitle(bookId, newTitle);
+      }
+
+      if (target.classList.contains('delete')) {
+        const password = prompt('Enter admin password to delete:');
+        if (password === null) {
+          return;
+        }
+        await deleteBook(bookId, password);
+      }
+    });
+
+    async function updateBookTitle(id, title) {
+      try {
+        const response = await fetch(`/books/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken
+          },
+          body: JSON.stringify({ title })
+        });
+
+        if (!response.ok) {
+          throw new Error('Unable to update book');
+        }
+
+        statusBox.textContent = 'Book updated successfully.';
+        await loadBooks();
+      } catch (error) {
+        statusBox.textContent = error.message;
+      }
+    }
+
+    async function deleteBook(id, adminPassword) {
+      try {
+        const response = await fetch(`/books/${id}?admin_password=${encodeURIComponent(adminPassword)}`, {
+          method: 'DELETE',
+          headers: {
+            'X-CSRF-Token': csrfToken
+          }
+        });
+
+        if (response.status === 401) {
+          statusBox.textContent = 'Unauthorized: incorrect password.';
+          return;
+        }
+
+        if (response.status === 404) {
+          statusBox.textContent = 'Book not found.';
+          return;
+        }
+
+        if (!response.ok && response.status !== 204) {
+          throw new Error('Unable to delete book');
+        }
+
+        statusBox.textContent = 'Book deleted successfully.';
+        await loadBooks();
+      } catch (error) {
+        statusBox.textContent = error.message;
+      }
+    }
+
+    loadBooks().catch((error) => {
+      statusBox.textContent = error.message;
+    });
+  </script>
+</body>
+</html>

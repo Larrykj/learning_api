@@ -33,4 +33,20 @@ class Api::BooksController < ApplicationController
       render json: { error: "Unauthorized" }, status: :unauthorized
     end
   end
+
+  def search
+    query = params[:q]
+    if query.blank?
+      render json: { error: "Search query is required" }, status: :bad_request
+      return
+    end
+
+    books = Book.where("title ILIKE ? OR author ILIKE ?", "%#{query}%", "%#{query}%")
+    
+    render json: {
+      query: query,
+      results_count: books.count,
+      books: books
+    }
+  end
 end

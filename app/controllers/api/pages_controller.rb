@@ -33,4 +33,19 @@ class Api::PagesController < ApplicationController
     name = params[:name] || "Guest"
     render json: { greeting: "Hello, #{name}! Welcome to the feature branch." }
   end
+
+  def user_info
+    name = params[:name] || "Unknown"
+    age = params[:age] || "Not specified"
+    city = params[:city] || "Unknown"
+    
+    render json: {
+      user: {
+        name: name,
+        age: age.to_i,
+        city: city,
+        summary: "#{name} is #{age} years old and lives in #{city}."
+      }
+    }
+  end
 end

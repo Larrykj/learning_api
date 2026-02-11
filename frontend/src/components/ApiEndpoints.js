@@ -9,7 +9,7 @@ const DEFAULTS = {
   search: { q: "whale" },
   create: { title: "New Adventure", author: "Jane Smith" },
   update: { title: "Updated Adventure" },
-  delete: { admin_password: "secret123" },
+  delete: { admin_password: "" },
 };
 
 function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {

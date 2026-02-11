@@ -81,8 +81,8 @@ The React app will automatically open at `http://localhost:3001`
   - Body: `{ "title": "Book Title", "author": "Author Name" }`
 - `PATCH /books/:id` - Update a book
   - Body: `{ "title": "New Title" }`
-- `DELETE /books/:id?admin_password=secret123` - Delete a book
-  - Requires admin password: `secret123`
+- `DELETE /books/:id?admin_password=YOUR_PASSWORD` - Delete a book
+  - Requires admin password set in `.env` file
 
 ## Features
 
@@ -113,4 +113,4 @@ The React app will automatically open at `http://localhost:3001`
 - Rails API runs on `http://localhost:3000`
 - React app runs on `http://localhost:3001`
 - CORS is configured to allow requests from localhost:3001
-- Admin password for deleting books: `secret123`
+- Admin password for deleting books: Set `ADMIN_PASSWORD` in `.env` file (see `.env.example`)

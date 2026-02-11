@@ -1,9 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  title: MyString
-  author: MyString
+harry_potter:
+  title: Harry Potter and the Philosopher's Stone
+  author: J.K. Rowling
 
-two:
-  title: MyString
-  author: MyString
+lord_of_rings:
+  title: The Lord of the Rings
+  author: J.R.R. Tolkien
+
+hobbit:
+  title: The Hobbit
+  author: J.R.R. Tolkien

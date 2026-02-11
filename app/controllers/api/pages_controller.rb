@@ -28,4 +28,19 @@ class Api::PagesController < ApplicationController
   def server_time
     render json: { server_time: Time.current.iso8601 }
   end
+
+  def user_info
+    name = params[:name]
+    age = params[:age]
+    city = params[:city]
+    
+    render json: { 
+      user: {
+        name: name,
+        age: age,
+        city: city
+      },
+      summary: "#{name} is #{age} years old and lives in #{city}."
+    }
+  end
 end

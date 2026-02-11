@@ -33,4 +33,16 @@ class Api::BooksController < ApplicationController
       render json: { error: "Unauthorized" }, status: :unauthorized
     end
   end
+
+  def search
+    query = params[:q]
+    if query.present?
+      books = Book.where("LOWER(title) LIKE ? OR LOWER(author) LIKE ?", 
+                         "%#{query.downcase}%", 
+                         "%#{query.downcase}%")
+      render json: books
+    else
+      render json: []
+    end
+  end
 end

@@ -6,8 +6,10 @@ Rails.application.routes.draw do
     get "/add", to: "pages#add"
     get "/check_age", to: "pages#check_age"
     get "/server_time", to: "pages#server_time"
+    get "/user_info", to: "pages#user_info"
     
     get "/books", to: "books#index"
+    get "/books/search", to: "books#search"
     post "/books", to: "books#create"
     patch "/books/:id", to: "books#update"
     delete "/books/:id", to: "books#destroy"

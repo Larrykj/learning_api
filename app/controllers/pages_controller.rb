@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
   def index
     # Serve the React app
-    render file: Rails.root.join('public', 'index.html'), layout: false
+    render file: Rails.root.join("public", "index.html"), layout: false
   end
 
   def home

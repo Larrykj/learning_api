@@ -38,7 +38,7 @@ class Api::PagesController < ApplicationController
     name = params[:name] || "Unknown"
     age = params[:age] || "Not specified"
     city = params[:city] || "Unknown"
-    
+
     render json: {
       user: {
         name: name,

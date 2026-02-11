@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import ApiEndpoints from "./components/ApiEndpoints";
 import BookForm from "./components/BookForm";
 import BookList from "./components/BookList";
 import ServerTime from "./components/ServerTime";
@@ -124,6 +125,12 @@ function App() {
             {status}
           </div>
         )}
+
+        <ApiEndpoints
+          apiUrl={API_URL}
+          sampleBookId={books.length > 0 ? books[0].id : null}
+          onAfterMutation={loadBooks}
+        />
       </main>
     </div>
   );

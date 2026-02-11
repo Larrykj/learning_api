@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     get "/server_time", to: "pages#server_time"
     get "/greet", to: "pages#greet"
     get "/user_info", to: "pages#user_info"
-    
+
     get "/books", to: "books#index"
     get "/books/search", to: "books#search"
     post "/books", to: "books#create"
@@ -17,9 +17,9 @@ Rails.application.routes.draw do
   end
 
   # Serve React app - this must be last
-  get '*path', to: 'pages#index', constraints: ->(req) { 
-    !req.xhr? && req.format.html? 
+  get "*path", to: "pages#index", constraints: ->(req) {
+    !req.xhr? && req.format.html?
   }
-  
-  root 'pages#index'
+
+  root "pages#index"
 end

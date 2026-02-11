@@ -42,7 +42,7 @@ class Api::BooksController < ApplicationController
     end
 
     books = Book.where("title ILIKE ? OR author ILIKE ?", "%#{query}%", "%#{query}%")
-    
+
     render json: {
       query: query,
       results_count: books.count,

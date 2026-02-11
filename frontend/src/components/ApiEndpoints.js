@@ -47,18 +47,18 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       key: "books_index",
       method: "GET",
       path: "/books",
-      title: "📚 Browse Collection",
+      title: "Browse Collection",
       description: "View all books in the library collection.",
-      icon: "📚",
+      icon: "[BOOKS]",
       format: (body) => formatBookList(body),
     },
     {
       key: "books_search",
       method: "GET",
       path: "/books/search",
-      title: "🔍 Search Catalog",
+      title: "Search Catalog",
       description: "Find books by title or author.",
-      icon: "🔍",
+      icon: "[SEARCH]",
       fields: [
         {
           name: "q",
@@ -72,9 +72,9 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       key: "books_create",
       method: "POST",
       path: "/books",
-      title: "📝 Add New Book",
+      title: "Add New Book",
       description: "Add a new book to the library collection.",
-      icon: "📝",
+      icon: "[ADD]",
       fields: [
         { name: "title", label: "Book Title", placeholder: "Enter book title" },
         {
@@ -86,16 +86,16 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       mutates: true,
       format: (body, status) =>
         status === 201
-          ? `✅ Successfully added "${body?.title || ""}" by ${body?.author || ""} to the collection`
-          : "❌ Failed to add book to collection",
+          ? `Successfully added "${body?.title || ""}" by ${body?.author || ""} to the collection`
+          : "Failed to add book to collection",
     },
     {
       key: "books_update",
       method: "PATCH",
       path: "/books/:id",
-      title: "✏️ Update Book Info",
+      title: "Update Book Info",
       description: "Edit book information in the catalog.",
-      icon: "✏️",
+      icon: "[EDIT]",
       fields: [
         { name: "id", label: "Book ID", placeholder: "Enter book ID" },
         {
@@ -108,16 +108,16 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       needsId: true,
       format: (body) =>
         body
-          ? `✅ Updated book title to: "${body.title || ""}"`
-          : "❌ Book update failed",
+          ? `Updated book title to: "${body.title || ""}"`
+          : "Book update failed",
     },
     {
       key: "books_delete",
       method: "DELETE",
       path: "/books/:id",
-      title: "🗑️ Remove Book",
+      title: "Remove Book",
       description: "Remove a book from the library collection (admin only).",
-      icon: "🗑️",
+      icon: "[DELETE]",
       fields: [
         { name: "id", label: "Book ID", placeholder: "Enter book ID" },
         {
@@ -131,8 +131,8 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       needsId: true,
       format: (_, status) =>
         status === 204
-          ? "✅ Book successfully removed from collection"
-          : "❌ Book removal failed - check password",
+          ? "Book successfully removed from collection"
+          : "Book removal failed - check password",
     },
   ];
 
@@ -141,18 +141,18 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       key: "home",
       method: "GET",
       path: "/home",
-      title: "🏠 Library Welcome",
+      title: "Library Welcome",
       description: "Get a welcome message from the library system.",
-      icon: "🏠",
+      icon: "[HOME]",
       format: (body) => body?.message || "No welcome message available.",
     },
     {
       key: "about_me",
       method: "GET",
       path: "/about_me",
-      title: "👤 Library Info",
+      title: "Library Info",
       description: "View information about the library system.",
-      icon: "👤",
+      icon: "[INFO]",
       format: (body) =>
         body
           ? `Library: ${body.name || "Unknown"} | System: ${body.learning_style || "Unknown"}`
@@ -162,9 +162,9 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       key: "server_time",
       method: "GET",
       path: "/server_time",
-      title: "🕐 Current Time",
+      title: "Current Time",
       description: "Check the current library server time.",
-      icon: "🕐",
+      icon: "[TIME]",
       format: (body) =>
         body?.server_time
           ? `Library server time: ${new Date(body.server_time).toLocaleString()}`
@@ -174,9 +174,9 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       key: "greet",
       method: "GET",
       path: "/greet",
-      title: "👋 Patron Greeting",
+      title: "Patron Greeting",
       description: "Get a personalized greeting for library patrons.",
-      icon: "👋",
+      icon: "[GREET]",
       fields: [
         {
           name: "name",
@@ -191,9 +191,9 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       key: "user_info",
       method: "GET",
       path: "/user_info",
-      title: "📋 Patron Profile",
+      title: "Patron Profile",
       description: "Generate a patron profile summary.",
-      icon: "📋",
+      icon: "[PROFILE]",
       fields: [
         { name: "name", label: "Full Name", placeholder: "Enter full name" },
         { name: "age", label: "Age", type: "number", placeholder: "Enter age" },
@@ -205,17 +205,17 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       key: "check_age",
       method: "GET",
       path: "/check_age",
-      title: "🎂 Library Card Eligibility",
+      title: "Library Card Eligibility",
       description: "Check if patron is eligible for a library card.",
-      icon: "🎂",
+      icon: "[CHECK]",
       fields: [
         { name: "age", label: "Age", type: "number", placeholder: "Enter age" },
       ],
       format: (body) => {
         if (body?.status === "allowed") {
-          return `✅ Eligible for library card! ${body.message}`;
+          return `Eligible for library card! ${body.message}`;
         } else if (body?.status === "denied") {
-          return `❌ Not eligible: ${body.message}`;
+          return `Not eligible: ${body.message}`;
         }
         return "No eligibility response.";
       },
@@ -224,10 +224,10 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       key: "add",
       method: "GET",
       path: "/add",
-      title: "🧮 Fee Calculator",
+      title: "Fee Calculator",
       description:
         "Calculate library fees (late fees, replacement costs, etc.).",
-      icon: "🧮",
+      icon: "[CALC]",
       fields: [
         {
           name: "num1",
@@ -323,25 +323,25 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
 
   const formatBookList = (body) => {
     if (!Array.isArray(body)) {
-      return "📚 No books returned from library catalog.";
+      return "No books returned from library catalog.";
     }
     if (body.length === 0) {
-      return "📚 Library collection is currently empty.";
+      return "Library collection is currently empty.";
     }
     const titles = body
       .slice(0, 3)
       .map((book) => book.title)
       .filter(Boolean);
     const extra = body.length > 3 ? ` (+${body.length - 3} more)` : "";
-    return `📚 Found ${body.length} books in collection. Recent titles: ${titles.join(", ")}${extra}`;
+    return `Found ${body.length} books in collection. Recent titles: ${titles.join(", ")}${extra}`;
   };
 
   const formatSearchResult = (body) => {
     if (!body || !Array.isArray(body.books)) {
-      return "🔍 No search results returned.";
+      return "No search results returned.";
     }
     if (body.results_count === 0) {
-      return `🔍 No matches found for "${body.query || "search term"}".`;
+      return `No matches found for "${body.query || "search term"}".`;
     }
     const titles = body.books
       .slice(0, 3)
@@ -349,7 +349,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       .filter(Boolean);
     const extra =
       body.results_count > 3 ? ` (+${body.results_count - 3} more)` : "";
-    return `🔍 Found ${body.results_count} matches. Top results: ${titles.join(", ")}${extra}`;
+    return `Found ${body.results_count} matches. Top results: ${titles.join(", ")}${extra}`;
   };
 
   const renderEndpointButton = (endpoint) => {
@@ -378,7 +378,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
           </div>
         </div>
         {isDisabled && (
-          <span className="endpoint-button-hint">⚠️ Add book first</span>
+          <span className="endpoint-button-hint">[WARNING] Add book first</span>
         )}
       </button>
     );
@@ -439,7 +439,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
 
         {endpoint.mutates && (
           <div className="endpoint-warning">
-            ⚠️ This operation will modify library data
+            [WARNING] This operation will modify library data
           </div>
         )}
 
@@ -454,7 +454,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
 
         {isDisabled && (
           <div className="endpoint-hint">
-            ⚠️ Add a book first to enable this operation
+            [WARNING] Add a book first to enable this operation
           </div>
         )}
 
@@ -463,7 +463,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
             className={`endpoint-response ${result.ok ? "response-success" : "response-error"}`}
           >
             <div className="response-header">
-              {result.ok ? "✅ Success" : "❌ Error"}
+              {result.ok ? "[SUCCESS]" : "[ERROR]"}
               {result.status && (
                 <span className="response-status">Status: {result.status}</span>
               )}
@@ -482,13 +482,13 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       {!selectedEndpoint ? (
         <>
           <div className="endpoints-header">
-            <h2>📖 Library Management System</h2>
+            <h2>Library Management System</h2>
             <p>Select an operation to view details and execute API requests</p>
           </div>
 
           <div className="library-section">
             <h3 className="library-section-title">
-              📚 Book Collection Management
+              Book Collection Management
             </h3>
             <p className="library-section-description">
               Manage your library's book collection
@@ -501,9 +501,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
           </div>
 
           <div className="library-section">
-            <h3 className="library-section-title">
-              🛠️ Library Tools & Services
-            </h3>
+            <h3 className="library-section-title">Library Tools & Services</h3>
             <p className="library-section-description">
               Utility functions for library operations
             </p>

@@ -25,7 +25,7 @@ function ServerTime({ apiUrl }) {
 
   return (
     <div className="server-time">
-      🕐 Server Time: {new Date(serverTime).toLocaleString()}
+      Server Time: {new Date(serverTime).toLocaleString()}
     </div>
   );
 }

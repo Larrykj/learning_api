@@ -8,7 +8,7 @@ namespace :frontend do
       system("npm run build") || abort("Frontend build failed!")
     end
 
-    puts "✅ Frontend built successfully!"
+    puts "[SUCCESS] Frontend built successfully!"
   end
 
   desc "Install frontend dependencies"
@@ -19,7 +19,7 @@ namespace :frontend do
       system("npm install") || abort("Frontend install failed!")
     end
 
-    puts "✅ Frontend dependencies installed!"
+    puts "[SUCCESS] Frontend dependencies installed!"
   end
 
   desc "Install dependencies and build frontend"

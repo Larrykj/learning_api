@@ -34,6 +34,11 @@ class Api::PagesController < ApplicationController
     age = params[:age]
     city = params[:city]
     
+    if name.blank? || age.blank? || city.blank?
+      render json: { error: "Missing required parameters: name, age, and city are required" }, status: :bad_request
+      return
+    end
+    
     render json: { 
       user: {
         name: name,

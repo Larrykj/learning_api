@@ -28,4 +28,9 @@ class Api::PagesController < ApplicationController
   def server_time
     render json: { server_time: Time.current.iso8601 }
   end
+
+  def greet
+    name = params[:name] || "Guest"
+    render json: { greeting: "Hello, #{name}! Welcome to the feature branch." }
+  end
 end

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     get "/add", to: "pages#add"
     get "/check_age", to: "pages#check_age"
     get "/server_time", to: "pages#server_time"
+    get "/greet", to: "pages#greet"
     
     get "/books", to: "books#index"
     post "/books", to: "books#create"

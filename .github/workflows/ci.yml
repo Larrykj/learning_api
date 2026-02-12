@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ master ]
+    branches: [ main, feature_chapter ]
 
 jobs:
   scan_ruby:
@@ -18,12 +18,15 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Set executable permissions for bin scripts
+        run: chmod +x bin/*
+
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
-      
+
       - name: Scan for known security vulnerabilities in gems used
         run: bin/bundler-audit
-      
+
   lint:
     runs-on: ubuntu-latest
     env:
@@ -36,6 +39,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
+      - name: Set executable permissions for bin scripts
+        run: chmod +x bin/*
 
       - name: Prepare RuboCop cache
         uses: actions/cache@v4
@@ -67,6 +73,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
+      - name: Set executable permissions for bin scripts
+        run: chmod +x bin/*
 
       - name: Run tests
         env:

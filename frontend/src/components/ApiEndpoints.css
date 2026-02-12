@@ -1,0 +1,389 @@
+/* ── Endpoints Section ─────────────────────────── */
+.endpoints-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.endpoints-header {
+    margin-bottom: 1.5rem;
+}
+
+.endpoints-header h2 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.endpoints-header p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+/* ── Section Groups ───────────────────────────── */
+.library-section {
+    margin-bottom: 2rem;
+}
+
+.library-section-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 0.3rem;
+}
+
+.library-section-description {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 1rem;
+}
+
+/* ── Endpoint Buttons Grid ────────────────────── */
+.endpoint-buttons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.endpoint-button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1.25rem;
+    background: #fafbfc;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.endpoint-button:hover:not(:disabled) {
+    border-color: #cbd5e1;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+}
+
+.endpoint-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.endpoint-button-content {
+    width: 100%;
+}
+
+.endpoint-button-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.endpoint-button-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.endpoint-button-method {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.endpoint-button-method.method-get {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.endpoint-button-method.method-post {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.endpoint-button-method.method-patch {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.endpoint-button-method.method-delete {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.endpoint-button-path {
+    font-size: 0.8rem;
+    color: #888;
+    font-family: "SF Mono", Monaco, "Courier New", monospace;
+}
+
+.endpoint-button-description {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+.endpoint-button-hint {
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+/* ── Endpoint Form View ───────────────────────── */
+.endpoint-form-view {
+    animation: fadeIn 0.2s ease;
+}
+
+.back-button {
+    background: none;
+    border: 1px solid #cbd5e1;
+    color: #555;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    transition: all 0.15s ease;
+}
+
+.back-button:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.endpoint-form-header h3 {
+    font-size: 1.3rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.endpoint-form-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.endpoint-method {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+}
+
+.endpoint-method.method-get {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.endpoint-method.method-post {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.endpoint-method.method-patch {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.endpoint-method.method-delete {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.endpoint-path {
+    font-size: 0.85rem;
+    color: #777;
+    font-family: "SF Mono", Monaco, "Courier New", monospace;
+}
+
+.endpoint-form-description {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+}
+
+/* ── Form Fields ──────────────────────────────── */
+.endpoint-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.endpoint-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.field-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #444;
+}
+
+.field-input {
+    padding: 0.6rem 0.8rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: border-color 0.15s ease;
+}
+
+.field-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+/* ── Warning & Hint ───────────────────────────── */
+.endpoint-warning {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid #f59e0b;
+}
+
+.endpoint-hint {
+    color: #999;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+/* ── Execute Button ───────────────────────────── */
+.execute-button {
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.execute-button.method-get {
+    background: #3b82f6;
+}
+
+.execute-button.method-get:hover:not(:disabled) {
+    background: #2563eb;
+}
+
+.execute-button.method-post {
+    background: #10b981;
+}
+
+.execute-button.method-post:hover:not(:disabled) {
+    background: #059669;
+}
+
+.execute-button.method-patch {
+    background: #f59e0b;
+}
+
+.execute-button.method-patch:hover:not(:disabled) {
+    background: #d97706;
+}
+
+.execute-button.method-delete {
+    background: #ef4444;
+}
+
+.execute-button.method-delete:hover:not(:disabled) {
+    background: #dc2626;
+}
+
+.execute-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Response ─────────────────────────────────── */
+.endpoint-response {
+    margin-top: 1.25rem;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.endpoint-response.response-success {
+    border: 1px solid #a7f3d0;
+}
+
+.endpoint-response.response-error {
+    border: 1px solid #fecaca;
+}
+
+.response-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.response-success .response-header {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.response-error .response-header {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.response-status {
+    font-weight: 400;
+    font-size: 0.8rem;
+}
+
+.response-body {
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #333;
+    background: #fafbfc;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* ── Animations ───────────────────────────────── */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Responsive ───────────────────────────────── */
+@media (max-width: 768px) {
+    .endpoints-section {
+        padding: 1rem;
+    }
+
+    .endpoint-buttons-grid {
+        grid-template-columns: 1fr;
+    }
+}

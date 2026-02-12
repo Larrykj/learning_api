@@ -1,51 +1,32 @@
 class Api::PagesController < ApplicationController
-  def home
-    render json: { message: "Hello, this is my first Rails endpoint!" }
+  # GET /api/status
+  # Returns API health check and overview
+  def status
+    render json: {
+      api: "Books API",
+      version: "1.0",
+      status: "running",
+      server_time: Time.current.iso8601,
+      total_books: Book.count
+    }
   end
 
-  def about_me
-    render json: { name: "Your Name", learning_style: "Roadmap" }
-  end
-
-  def add
-    a = params[:num1].to_i
-    b = params[:num2].to_i
-
-    result = a + b
-
-    render json: { input_a: a, input_b: b, sum: result }
-  end
-
-  def check_age
-    age = params[:age].to_i
-    if age >= 18
-      render json: { status: "allowed", message: "Welcome to the club!" }
-    else
-      render json: { status: "denied", message: "You are too young." }
-    end
-  end
-
-  def server_time
-    render json: { server_time: Time.current.iso8601 }
-  end
-
-  def greet
-    name = params[:name] || "Guest"
-    render json: { greeting: "Hello, #{name}! Welcome to the feature branch." }
-  end
-
-  def user_info
-    name = params[:name] || "Unknown"
-    age = params[:age] || "Not specified"
-    city = params[:city] || "Unknown"
+  # GET /api/stats
+  # Returns collection statistics
+  def stats
+    books = Book.all
 
     render json: {
-      user: {
-        name: name,
-        age: age.to_i,
-        city: city,
-        summary: "#{name} is #{age} years old and lives in #{city}."
-      }
+      total_books: books.count,
+      total_authors: books.distinct.count(:author),
+      recent_books: books.order(created_at: :desc).limit(5),
+      books_by_author: books.group(:author).count
     }
+  end
+
+  # GET /api/server_time
+  # Returns the current server time
+  def server_time
+    render json: { server_time: Time.current.iso8601 }
   end
 end

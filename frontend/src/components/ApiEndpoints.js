@@ -2,13 +2,9 @@ import { useEffect, useState } from "react";
 import "./ApiEndpoints.css";
 
 const DEFAULTS = {
-  add: { num1: "15", num2: "3" },
-  check_age: { age: "18" },
-  greet: { name: "Reader" },
-  user_info: { name: "Alex Johnson", age: "28", city: "Portland" },
-  search: { q: "whale" },
-  create: { title: "New Adventure", author: "Jane Smith" },
-  update: { title: "Updated Adventure" },
+  search: { q: "" },
+  create: { title: "", author: "" },
+  update: { title: "" },
   delete: { admin_password: "" },
 };
 
@@ -17,10 +13,6 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
   const [loading, setLoading] = useState({});
   const [selectedEndpoint, setSelectedEndpoint] = useState(null);
   const [inputs, setInputs] = useState({
-    add: DEFAULTS.add,
-    check_age: DEFAULTS.check_age,
-    greet: DEFAULTS.greet,
-    user_info: DEFAULTS.user_info,
     books_search: DEFAULTS.search,
     books_create: DEFAULTS.create,
     books_update: { id: "", ...DEFAULTS.update },
@@ -42,23 +34,45 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
     }));
   }, [sampleBookId]);
 
-  const libraryManagement = [
+  // ── Read Operations ──────────────────────────────────────────
+  const readEndpoints = [
+    {
+      key: "api_status",
+      method: "GET",
+      path: "/status",
+      title: "API Status",
+      description: "Health check returning server time and total book count.",
+      format: (body) =>
+        body
+          ? `Status: ${body.status} | Books: ${body.total_books} | Time: ${body.server_time}`
+          : "No status available.",
+    },
+    {
+      key: "api_stats",
+      method: "GET",
+      path: "/stats",
+      title: "Collection Statistics",
+      description:
+        "Aggregated stats including book count, author count, and recent additions.",
+      format: (body) =>
+        body
+          ? `Books: ${body.total_books} | Authors: ${body.total_authors}`
+          : "No stats available.",
+    },
     {
       key: "books_index",
       method: "GET",
       path: "/books",
-      title: "Browse Collection",
-      description: "View all books in the library collection.",
-      icon: "[BOOKS]",
+      title: "List All Books",
+      description: "Retrieve every book in the collection.",
       format: (body) => formatBookList(body),
     },
     {
       key: "books_search",
       method: "GET",
       path: "/books/search",
-      title: "Search Catalog",
-      description: "Find books by title or author.",
-      icon: "[SEARCH]",
+      title: "Search Books",
+      description: "Find books by title or author using a search query.",
       fields: [
         {
           name: "q",
@@ -68,34 +82,36 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       ],
       format: (body) => formatSearchResult(body),
     },
+  ];
+
+  // ── Write Operations ─────────────────────────────────────────
+  const writeEndpoints = [
     {
       key: "books_create",
       method: "POST",
       path: "/books",
-      title: "Add New Book",
-      description: "Add a new book to the library collection.",
-      icon: "[ADD]",
+      title: "Create Book",
+      description: "Add a new book to the collection.",
       fields: [
-        { name: "title", label: "Book Title", placeholder: "Enter book title" },
+        { name: "title", label: "Title", placeholder: "Enter book title" },
         {
           name: "author",
-          label: "Author Name",
+          label: "Author",
           placeholder: "Enter author name",
         },
       ],
       mutates: true,
       format: (body, status) =>
         status === 201
-          ? `Successfully added "${body?.title || ""}" by ${body?.author || ""} to the collection`
-          : "Failed to add book to collection",
+          ? `Created "${body?.title}" by ${body?.author}`
+          : "Failed to create book.",
     },
     {
       key: "books_update",
       method: "PATCH",
       path: "/books/:id",
-      title: "Update Book Info",
-      description: "Edit book information in the catalog.",
-      icon: "[EDIT]",
+      title: "Update Book",
+      description: "Edit the title of an existing book by its ID.",
       fields: [
         { name: "id", label: "Book ID", placeholder: "Enter book ID" },
         {
@@ -108,16 +124,15 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       needsId: true,
       format: (body) =>
         body
-          ? `Updated book title to: "${body.title || ""}"`
-          : "Book update failed",
+          ? `Updated title to: "${body.title}"`
+          : "Update failed.",
     },
     {
       key: "books_delete",
       method: "DELETE",
       path: "/books/:id",
-      title: "Remove Book",
-      description: "Remove a book from the library collection (admin only).",
-      icon: "[DELETE]",
+      title: "Delete Book",
+      description: "Remove a book from the collection. Requires admin password.",
       fields: [
         { name: "id", label: "Book ID", placeholder: "Enter book ID" },
         {
@@ -131,121 +146,8 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       needsId: true,
       format: (_, status) =>
         status === 204
-          ? "Book successfully removed from collection"
-          : "Book removal failed - check password",
-    },
-  ];
-
-  const libraryTools = [
-    {
-      key: "home",
-      method: "GET",
-      path: "/home",
-      title: "Library Welcome",
-      description: "Get a welcome message from the library system.",
-      icon: "[HOME]",
-      format: (body) => body?.message || "No welcome message available.",
-    },
-    {
-      key: "about_me",
-      method: "GET",
-      path: "/about_me",
-      title: "Library Info",
-      description: "View information about the library system.",
-      icon: "[INFO]",
-      format: (body) =>
-        body
-          ? `Library: ${body.name || "Unknown"} | System: ${body.learning_style || "Unknown"}`
-          : "No library information available.",
-    },
-    {
-      key: "server_time",
-      method: "GET",
-      path: "/server_time",
-      title: "Current Time",
-      description: "Check the current library server time.",
-      icon: "[TIME]",
-      format: (body) =>
-        body?.server_time
-          ? `Library server time: ${new Date(body.server_time).toLocaleString()}`
-          : "Server time unavailable.",
-    },
-    {
-      key: "greet",
-      method: "GET",
-      path: "/greet",
-      title: "Patron Greeting",
-      description: "Get a personalized greeting for library patrons.",
-      icon: "[GREET]",
-      fields: [
-        {
-          name: "name",
-          label: "Patron Name",
-          placeholder: "Enter visitor name",
-        },
-      ],
-      format: (body) =>
-        body?.greeting ? body.greeting : "No greeting available.",
-    },
-    {
-      key: "user_info",
-      method: "GET",
-      path: "/user_info",
-      title: "Patron Profile",
-      description: "Generate a patron profile summary.",
-      icon: "[PROFILE]",
-      fields: [
-        { name: "name", label: "Full Name", placeholder: "Enter full name" },
-        { name: "age", label: "Age", type: "number", placeholder: "Enter age" },
-        { name: "city", label: "City", placeholder: "Enter city" },
-      ],
-      format: (body) => body?.user?.summary || "No profile summary available.",
-    },
-    {
-      key: "check_age",
-      method: "GET",
-      path: "/check_age",
-      title: "Library Card Eligibility",
-      description: "Check if patron is eligible for a library card.",
-      icon: "[CHECK]",
-      fields: [
-        { name: "age", label: "Age", type: "number", placeholder: "Enter age" },
-      ],
-      format: (body) => {
-        if (body?.status === "allowed") {
-          return `Eligible for library card! ${body.message}`;
-        } else if (body?.status === "denied") {
-          return `Not eligible: ${body.message}`;
-        }
-        return "No eligibility response.";
-      },
-    },
-    {
-      key: "add",
-      method: "GET",
-      path: "/add",
-      title: "Fee Calculator",
-      description:
-        "Calculate library fees (late fees, replacement costs, etc.).",
-      icon: "[CALC]",
-      fields: [
-        {
-          name: "num1",
-          label: "Base Fee ($)",
-          type: "number",
-          placeholder: "Enter base amount",
-        },
-        {
-          name: "num2",
-          label: "Additional Fee ($)",
-          type: "number",
-          placeholder: "Enter additional amount",
-        },
-      ],
-      format: (body) =>
-        body
-          ? `Total Fee: $${body.input_a} + $${body.input_b} = $${body.sum}`
-          : "No calculation available.",
+          ? "Book deleted successfully."
+          : "Deletion failed. Check the password.",
     },
   ];
 
@@ -266,7 +168,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
     const needsId = endpoint.needsId && !idValue;
     if (needsId) {
       setResult(endpoint.key, {
-        error: "No book id available. Add a book first.",
+        error: "No book ID available. Add a book first.",
       });
       return;
     }
@@ -323,25 +225,25 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
 
   const formatBookList = (body) => {
     if (!Array.isArray(body)) {
-      return "No books returned from library catalog.";
+      return "No books returned.";
     }
     if (body.length === 0) {
-      return "Library collection is currently empty.";
+      return "Collection is empty.";
     }
     const titles = body
       .slice(0, 3)
       .map((book) => book.title)
       .filter(Boolean);
     const extra = body.length > 3 ? ` (+${body.length - 3} more)` : "";
-    return `Found ${body.length} books in collection. Recent titles: ${titles.join(", ")}${extra}`;
+    return `Found ${body.length} books. Titles: ${titles.join(", ")}${extra}`;
   };
 
   const formatSearchResult = (body) => {
     if (!body || !Array.isArray(body.books)) {
-      return "No search results returned.";
+      return "No results returned.";
     }
     if (body.results_count === 0) {
-      return `No matches found for "${body.query || "search term"}".`;
+      return `No matches for "${body.query || ""}".`;
     }
     const titles = body.books
       .slice(0, 3)
@@ -349,7 +251,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       .filter(Boolean);
     const extra =
       body.results_count > 3 ? ` (+${body.results_count - 3} more)` : "";
-    return `Found ${body.results_count} matches. Top results: ${titles.join(", ")}${extra}`;
+    return `Found ${body.results_count} matches: ${titles.join(", ")}${extra}`;
   };
 
   const renderEndpointButton = (endpoint) => {
@@ -362,7 +264,6 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
         onClick={() => setSelectedEndpoint(endpoint)}
         disabled={isDisabled}
       >
-        <span className="endpoint-button-icon">{endpoint.icon}</span>
         <div className="endpoint-button-content">
           <div className="endpoint-button-title">{endpoint.title}</div>
           <div className="endpoint-button-meta">
@@ -378,7 +279,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
           </div>
         </div>
         {isDisabled && (
-          <span className="endpoint-button-hint">[WARNING] Add book first</span>
+          <span className="endpoint-button-hint">Add a book first</span>
         )}
       </button>
     );
@@ -399,11 +300,10 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
             setResult(endpoint.key, null);
           }}
         >
-          ← Back to Endpoints
+          Back to All Endpoints
         </button>
 
         <div className="endpoint-form-header">
-          <span className="endpoint-form-icon">{endpoint.icon}</span>
           <h3>{endpoint.title}</h3>
         </div>
 
@@ -439,7 +339,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
 
         {endpoint.mutates && (
           <div className="endpoint-warning">
-            [WARNING] This operation will modify library data
+            This operation will modify data
           </div>
         )}
 
@@ -454,7 +354,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
 
         {isDisabled && (
           <div className="endpoint-hint">
-            [WARNING] Add a book first to enable this operation
+            Add a book first to enable this operation
           </div>
         )}
 
@@ -463,7 +363,7 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
             className={`endpoint-response ${result.ok ? "response-success" : "response-error"}`}
           >
             <div className="response-header">
-              {result.ok ? "[SUCCESS]" : "[ERROR]"}
+              {result.ok ? "SUCCESS" : "ERROR"}
               {result.status && (
                 <span className="response-status">Status: {result.status}</span>
               )}
@@ -482,31 +382,31 @@ function ApiEndpoints({ apiUrl, sampleBookId, onAfterMutation }) {
       {!selectedEndpoint ? (
         <>
           <div className="endpoints-header">
-            <h2>Library Management System</h2>
-            <p>Select an operation to view details and execute API requests</p>
+            <h2>API Endpoints</h2>
+            <p>Select an endpoint to view details and execute requests</p>
           </div>
 
           <div className="library-section">
-            <h3 className="library-section-title">
-              Book Collection Management
-            </h3>
+            <h3 className="library-section-title">Read Operations</h3>
             <p className="library-section-description">
-              Manage your library's book collection
+              Retrieve data from the books collection
             </p>
             <div className="endpoint-buttons-grid">
-              {libraryManagement.map((endpoint) =>
+              {readEndpoints.map((endpoint) =>
                 renderEndpointButton(endpoint),
               )}
             </div>
           </div>
 
           <div className="library-section">
-            <h3 className="library-section-title">Library Tools & Services</h3>
+            <h3 className="library-section-title">Write Operations</h3>
             <p className="library-section-description">
-              Utility functions for library operations
+              Create, update, or delete books in the collection
             </p>
             <div className="endpoint-buttons-grid">
-              {libraryTools.map((endpoint) => renderEndpointButton(endpoint))}
+              {writeEndpoints.map((endpoint) =>
+                renderEndpointButton(endpoint),
+              )}
             </div>
           </div>
         </>

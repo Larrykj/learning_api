@@ -24,10 +24,10 @@ function BookItem({ book, onUpdate, onDelete }) {
       </div>
       <div className="book-actions">
         <button onClick={handleRename} className="btn btn-edit">
-          Edit
+          ✏️ Edit
         </button>
         <button onClick={handleDelete} className="btn btn-delete">
-          Delete
+          🗑️ Delete
         </button>
       </div>
     </div>

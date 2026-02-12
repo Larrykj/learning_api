@@ -28,4 +28,24 @@ class Api::PagesController < ApplicationController
   def server_time
     render json: { server_time: Time.current.iso8601 }
   end
+
+  def user_info
+    name = params[:name]
+    age = params[:age]
+    city = params[:city]
+    
+    if name.blank? || age.blank? || city.blank?
+      render json: { error: "Missing required parameters: name, age, and city are required" }, status: :bad_request
+      return
+    end
+    
+    render json: { 
+      user: {
+        name: name,
+        age: age,
+        city: city
+      },
+      summary: "#{name} is #{age} years old and lives in #{city}."
+    }
+  end
 end

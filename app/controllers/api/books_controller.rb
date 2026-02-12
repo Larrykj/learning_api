@@ -26,11 +26,27 @@ class Api::BooksController < ApplicationController
     book = Book.find_by(id: params[:id])
     if book.nil?
       render json: { error: "Book not found" }, status: :not_found
-    elsif params[:admin_password] == "secret123"
+    elsif params[:admin_password] == ENV.fetch("ADMIN_PASSWORD", "admin123")
       book.destroy
       head :no_content
     else
       render json: { error: "Unauthorized" }, status: :unauthorized
     end
+  end
+
+  def search
+    query = params[:q]
+    if query.blank?
+      render json: { error: "Search query is required" }, status: :bad_request
+      return
+    end
+
+    books = Book.where("title ILIKE ? OR author ILIKE ?", "%#{query}%", "%#{query}%")
+
+    render json: {
+      query: query,
+      results_count: books.count,
+      books: books
+    }
   end
 end

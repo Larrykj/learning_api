@@ -1,18 +1,32 @@
 import { useEffect, useState } from "react";
 import "./App.css";
+import ApiEndpoints from "./components/ApiEndpoints";
 import BookForm from "./components/BookForm";
 import BookList from "./components/BookList";
-import ServerTime from "./components/ServerTime";
 
 const API_URL = "/api";
 
 function App() {
   const [books, setBooks] = useState([]);
   const [status, setStatus] = useState("");
+  const [serverTime, setServerTime] = useState(null);
 
   useEffect(() => {
     loadBooks();
+    fetchServerTime();
+    const interval = setInterval(fetchServerTime, 60000);
+    return () => clearInterval(interval);
   }, []);
+
+  const fetchServerTime = async () => {
+    try {
+      const response = await fetch(`${API_URL}/server_time`);
+      const data = await response.json();
+      setServerTime(data.server_time);
+    } catch (error) {
+      // silently fail — server time is non-critical
+    }
+  };
 
   const loadBooks = async () => {
     try {
@@ -102,8 +116,13 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>📚 Books API Frontend</h1>
-        <ServerTime apiUrl={API_URL} />
+        <h1>Books API</h1>
+        <p className="App-subtitle">Manage your book collection</p>
+        {serverTime && (
+          <p className="App-server-time">
+            Server Time: {new Date(serverTime).toLocaleString()}
+          </p>
+        )}
       </header>
 
       <main className="App-main">
@@ -124,6 +143,12 @@ function App() {
             {status}
           </div>
         )}
+
+        <ApiEndpoints
+          apiUrl={API_URL}
+          sampleBookId={books.length > 0 ? books[0].id : null}
+          onAfterMutation={loadBooks}
+        />
       </main>
     </div>
   );

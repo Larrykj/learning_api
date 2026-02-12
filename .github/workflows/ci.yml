@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ master ]
+    branches: [ main, feature_chapter ]
 
 jobs:
   scan_ruby:
@@ -18,12 +18,15 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Set executable permissions for bin scripts
+        run: chmod +x bin/*
+
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
-      
+
       - name: Scan for known security vulnerabilities in gems used
         run: bin/bundler-audit
-      
+
   lint:
     runs-on: ubuntu-latest
     env:
@@ -36,6 +39,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+
+      - name: Set executable permissions for bin scripts
+        run: chmod +x bin/*
 
       - name: Prepare RuboCop cache
         uses: actions/cache@v4
@@ -53,12 +59,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    # services:
-    #  redis:
-    #    image: valkey/valkey:8
-    #    ports:
-    #      - 6379:6379
-    #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: learning_api_test
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -68,9 +79,14 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Set executable permissions for bin scripts
+        run: chmod +x bin/*
+
       - name: Run tests
         env:
           RAILS_ENV: test
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          # REDIS_URL: redis://localhost:6379/0
+          PGUSER: postgres
+          PGPASSWORD: ""
+          PGHOST: localhost
+          PGPORT: 5432
         run: bin/rails db:test:prepare test
